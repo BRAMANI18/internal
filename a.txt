@@ -1,1 +1,29 @@
+process.env.PORT = 3001;
+
+const { Builder, By, until } = require('selenium-webdriver');
+const chrome = require('selenium-webdriver/chrome');
+const assert = require('assert');
+const app = require('./app');  // Assuming you have an app.js file with the Express app
+
+(async function example() {
+  let driver = await new Builder().forBrowser('chrome').build();  // Fixed quote
+  try {
+    // Corrected the URL string and wrapped it in quotes
+    await driver.get('http://localhost:3001');  
+
+    const element = await driver.wait(until.elementLocated(By.tagName('h1')), 10000);
+    const text = await element.getText();
+
+    // Fixed mismatched quotes and added correct string for assertion
+    assert.strictEqual(text, "Hello, World!");  
+
+    // Fixed typo in console log message
+    console.log('Test passed: page contains "Hello, World!"');
+  } catch (error) {
+    console.error('Test failed:', error);
+  } finally {
+    await driver.quit();
+    process.exit();
+  }
+})();
 
